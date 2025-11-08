@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="6.0"
+         xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+
+    <!-- Configuração da Sessão -->
+    <session-config>
+        <session-timeout>10</session-timeout>
+    </session-config>
+
+    <!-- Página Inicial -->
+    <welcome-file-list>
+        <welcome-file>login.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!-- Servlets de Autenticação -->
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/LoginServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/LogoutServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlets de Cadastro/Perfil -->
+    <servlet>
+        <servlet-name>CadastroServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.CadastroServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CadastroServlet</servlet-name>
+        <url-pattern>/CadastroServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PerfilServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.PerfilServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PerfilServlet</servlet-name>
+        <url-pattern>/PerfilServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DadosCadastraisServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.DadosCadastraisServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DadosCadastraisServlet</servlet-name>
+        <url-pattern>/DadosCadastraisServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AtualizarDadosServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.AtualizarDadosServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AtualizarDadosServlet</servlet-name>
+        <url-pattern>/AtualizarDadosServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlets Financeiros -->
+    <servlet>
+        <servlet-name>SaqueServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.SaqueServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SaqueServlet</servlet-name>
+        <url-pattern>/SaqueServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DepositoServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.DepositoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DepositoServlet</servlet-name>
+        <url-pattern>/DepositoServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TransferenciaServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.TransferenciaServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TransferenciaServlet</servlet-name>
+        <url-pattern>/TransferenciaServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>FinalizarTransferenciaServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.FinalizarTransferenciaServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FinalizarTransferenciaServlet</servlet-name>
+        <url-pattern>/FinalizarTransferenciaServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ExtratoServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.ExtratoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ExtratoServlet</servlet-name>
+        <url-pattern>/ExtratoServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>InvestimentoServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.InvestimentoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>InvestimentoServlet</servlet-name>
+        <url-pattern>/InvestimentoServlet</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>MeusInvestimentosServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.MeusInvestimentosServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MeusInvestimentosServlet</servlet-name>
+        <url-pattern>/MeusInvestimentosServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlets do Gerente -->
+    <servlet>
+        <servlet-name>ListaClientesServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.gerente.ListaClientesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ListaClientesServlet</servlet-name>
+        <url-pattern>/gerente/ListaClientesServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>EditarClienteServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.gerente.EditarClienteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EditarClienteServlet</servlet-name>
+        <url-pattern>/gerente/EditarClienteServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>BuscaClientesServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.gerente.BuscaClientesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BuscaClientesServlet</servlet-name>
+        <url-pattern>/gerente/BuscaClientesServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ExcluirClienteServlet</servlet-name>
+        <servlet-class>br.uff.ic.grupo6.banco.controller.gerente.ExcluirClienteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ExcluirClienteServlet</servlet-name>
+        <url-pattern>/gerente/ExcluirClienteServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Filtro para Cookies -->
+    <filter>
+        <filter-name>LembrarMeFiltro</filter-name>
+        <filter-class>br.uff.ic.grupo6.banco.controller.LembrarMeFiltro</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LembrarMeFiltro</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+</web-app>

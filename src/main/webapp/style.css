@@ -1,0 +1,154 @@
+/* ========================================= */
+/* ESTILOS GERAIS                          */
+/* ========================================= */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+
+/* ========================================= */
+/* ESTILOS DAS PÁGINAS DE LOGIN E CADASTRO   */
+/* ========================================= */
+.login-box {
+    width: 100%;
+    padding: 2.5rem;
+    background-color: #1e1e1e;
+    border-radius: 1rem;
+    border: 1px solid #333;
+}
+
+.login-box h1 {
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 2.2rem;
+}
+
+/* Estiliza os campos de input e select para o tema escuro */
+.form-control, .form-select {
+    background-color: #2b2b2b;
+    border-color: #444;
+    color: #ffffff;
+}
+
+/* Cor de foco dos formulários no tom amarelo-alaranjado */
+.form-control:focus, .form-select:focus {
+    background-color: #2b2b2b;
+    border-color: #FFC107; /* Cor de destaque ATUALIZADA */
+    color: #ffffff;
+    box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25); /* Brilho do foco ATUALIZADO */
+}
+
+.form-floating > label {
+    color: #888;
+}
+
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > select.form-select ~ label {
+    transform: scale(.85) translateY(-.5rem) translateX(.15rem);
+}
+
+
+/* Altera a cor do ícone de 'olho' no campo de senha (Chrome, Edge) */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-webkit-password-reveal-button {
+    filter: invert(75%);
+}
+
+/* Altera a cor do ícone de calendário no campo de data */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(75%);
+}
+
+
+/* ===================================================================== */
+/* ESTILO PARA O BOTÃO PERSONALIZADO (Depósito, Saque, Transferência, etc)  */
+/* ===================================================================== */
+.btn-custom {
+    /* Gradiente em tom amarelo alaranjado */
+    background: linear-gradient(to bottom, #FFC107, #FFA000);
+    border: 1px solid #E65100; /* Borda em tom laranja escuro para definição */
+    color: #4B2A00; /* Fonte marrom-café escura para alto contraste */
+    font-weight: bold;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.15); /* Leve brilho superior na fonte */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-custom:hover, .btn-custom:focus {
+    /* Gradiente mais claro no hover para o efeito de "acender" */
+    background: linear-gradient(to bottom, #FFD54F, #FFC107);
+    border-color: #FFA000;
+    /* A fonte mantém a cor escura, aumentando o contraste com o fundo mais claro */
+    color: #4B2A00;
+    transform: translateY(-3px); /* Efeito de elevação */
+    /* Sombra de elevação + brilho (glow) em tom dourado */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 0 20px rgba(255, 193, 7, 0.7);
+}
+
+
+/* Estiliza o botão secundário */
+.btn-outline-secondary {
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #333;
+    border-color: #555;
+    color: #ffffff;
+}
+
+
+/* ========================================= */
+/* ESTILOS PARA O DASHBOARD                  */
+/* ========================================= */
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.sidebar .nav-link {
+    font-size: 1.1rem;
+    color: #adb5bd;
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+}
+
+.main-content {
+    flex-grow: 1;
+    background-color: #1a1a1a;
+    margin-left: 280px;
+    min-height: 100vh;
+}
+
+.card-balance {
+    background-color: #2b2b2b;
+    border: none;
+    border-radius: 1rem;
+}
+
+.card-action {
+    background-color: #2b2b2b;
+    border: 1px solid #333;
+    color: #e0e0e0;
+    transition: all 0.2s ease-in-out;
+}
+
+.card-action:hover {
+    transform: translateY(-5px);
+    background-color: #333;
+    /* Atualizando a cor do hover nos cards */
+    color: #FFC107;
+}

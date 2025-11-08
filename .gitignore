@@ -1,0 +1,35 @@
+# Ignorar diretórios de build do Maven e arquivos temporários
+target/
+*.war
+*.jar
+*.ear
+*.zip
+*.tar.gz
+*.log
+
+# Ignorar arquivos gerados pela JVM
+*.class
+
+# Ignorar configurações e caches do NetBeans
+nbproject/private/
+.nbattrs
+*.orig
+*.bak
+*.swp
+
+# Ignorar configurações de outras IDEs (se usar no futuro)
+.idea/
+.vscode/
+*.iml
+.project
+.classpath
+.settings/
+!.settings/org.eclipse.wst.common.component
+
+# Ignorar arquivos de banco de dados locais (se não forem versionados intencionalmente)
+*.mv.db
+*.trace.db
+
+# Arquivos de lista gerados pelo NetBeans/Maven que não devem ser versionados
+*createdFiles.list
+*inputFiles.list
