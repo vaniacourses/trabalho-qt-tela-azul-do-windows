@@ -16,13 +16,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.eq;
 
 /**
  * Testes estruturais (caixa-branca) cobrindo arestas relevantes do fluxo de cadastro.
  */
 @ExtendWith(MockitoExtension.class)
-public class ClienteServiceCadastrarNovoClienteEstruturalTest {
+class ClienteServiceCadastrarNovoClienteEstruturalTest {
 
     @Mock
     private UsuarioDAO usuarioDAO;
@@ -45,9 +44,9 @@ public class ClienteServiceCadastrarNovoClienteEstruturalTest {
     @Test
     @DisplayName("Caminho feliz: todas as validações passam")
     void caminhoFeliz() throws Exception {
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("12345678901"))).thenReturn(null);
+        Mockito.when(usuarioDAO.buscarPorCpf(("12345678901"))).thenReturn(null);
         assertDoesNotThrow(() -> clienteService.cadastrarNovoCliente(clienteBase, "Abcd1234"));
-        Mockito.verify(usuarioDAO).cadastrarCliente(eq(clienteBase));
+        Mockito.verify(usuarioDAO).cadastrarCliente((clienteBase));
     }
 
     @Test
@@ -60,7 +59,7 @@ public class ClienteServiceCadastrarNovoClienteEstruturalTest {
     @Test
     @DisplayName("Aresta CPF duplicado")
     void cpfDuplicado() throws Exception {
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("12345678901"))).thenReturn(new Cliente());
+        Mockito.when(usuarioDAO.buscarPorCpf(("12345678901"))).thenReturn(new Cliente());
         assertThrows(ValidationException.class, () -> clienteService.cadastrarNovoCliente(clienteBase, "Abcd1234"));
         Mockito.verify(usuarioDAO, Mockito.never()).cadastrarCliente(Mockito.any());
     }
@@ -69,7 +68,7 @@ public class ClienteServiceCadastrarNovoClienteEstruturalTest {
     @DisplayName("Aresta CPF inválido (formato)")
     void cpfInvalidoFormato() throws Exception {
         clienteBase.setCpf("123");
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("123"))).thenReturn(null);
+        Mockito.when(usuarioDAO.buscarPorCpf(("123"))).thenReturn(null);
         assertThrows(ValidationException.class, () -> clienteService.cadastrarNovoCliente(clienteBase, "Abcd1234"));
     }
 
@@ -77,7 +76,7 @@ public class ClienteServiceCadastrarNovoClienteEstruturalTest {
     @DisplayName("Aresta Email inválido")
     void emailInvalido() throws Exception {
         clienteBase.setEmail("sem_arroba");
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("12345678901"))).thenReturn(null);
+        Mockito.when(usuarioDAO.buscarPorCpf(("12345678901"))).thenReturn(null);
         assertThrows(ValidationException.class, () -> clienteService.cadastrarNovoCliente(clienteBase, "Abcd1234"));
     }
 
@@ -85,7 +84,7 @@ public class ClienteServiceCadastrarNovoClienteEstruturalTest {
     @DisplayName("Aresta Idade menor que 18")
     void idadeMenorQue18() throws Exception {
         clienteBase.setDataNascimento(LocalDate.now().minusYears(17));
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("12345678901"))).thenReturn(null);
+        Mockito.when(usuarioDAO.buscarPorCpf(("12345678901"))).thenReturn(null);
         assertThrows(ValidationException.class, () -> clienteService.cadastrarNovoCliente(clienteBase, "Abcd1234"));
     }
 
@@ -93,7 +92,7 @@ public class ClienteServiceCadastrarNovoClienteEstruturalTest {
     @DisplayName("Aresta Renda negativa")
     void rendaNegativa() throws Exception {
         clienteBase.setRenda(-1.0);
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("12345678901"))).thenReturn(null);
+        Mockito.when(usuarioDAO.buscarPorCpf(("12345678901"))).thenReturn(null);
         assertThrows(ValidationException.class, () -> clienteService.cadastrarNovoCliente(clienteBase, "Abcd1234"));
     }
 
@@ -101,7 +100,7 @@ public class ClienteServiceCadastrarNovoClienteEstruturalTest {
     @DisplayName("Aresta Senha fraca/nula")
     void senhaFracaOuNula() throws Exception {
         clienteBase.setSenha("abc");
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("12345678901"))).thenReturn(null);
+        Mockito.when(usuarioDAO.buscarPorCpf(("12345678901"))).thenReturn(null);
         assertThrows(ValidationException.class, () -> clienteService.cadastrarNovoCliente(clienteBase, "abc"));
     }
 }

@@ -13,19 +13,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 
 /**
  * Testes funcionais (caixa-preta) para cadastrarNovoCliente(),
  * usando classes de equivalência e valores limite.
  */
 @ExtendWith(MockitoExtension.class)
-public class ClienteServiceCadastrarNovoClienteFuncionalTest {
+class ClienteServiceCadastrarNovoClienteFuncionalTest {
 
     @Mock
     private UsuarioDAO usuarioDAO;
@@ -48,16 +46,16 @@ public class ClienteServiceCadastrarNovoClienteFuncionalTest {
     @Test
     @DisplayName("Classe válida: cadastro bem-sucedido")
     void deveCadastrarClienteValido() throws Exception {
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("12345678901"))).thenReturn(null);
+        Mockito.when(usuarioDAO.buscarPorCpf("12345678901")).thenReturn(null);
 
         assertDoesNotThrow(() -> clienteService.cadastrarNovoCliente(clienteBaseValido, "Senha123"));
-        Mockito.verify(usuarioDAO).cadastrarCliente(eq(clienteBaseValido));
+        Mockito.verify(usuarioDAO).cadastrarCliente((clienteBaseValido));
     }
 
     @Test
     @DisplayName("Senhas diferentes: falha de validação")
     void deveFalharQuandoSenhasNaoConferem() throws Exception {
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("12345678901"))).thenReturn(null);
+        Mockito.when(usuarioDAO.buscarPorCpf("12345678901")).thenReturn(null);
 
         ValidationException ex = assertThrows(ValidationException.class,
                 () -> clienteService.cadastrarNovoCliente(clienteBaseValido, "Outra123"));
@@ -68,7 +66,7 @@ public class ClienteServiceCadastrarNovoClienteFuncionalTest {
     @Test
     @DisplayName("CPF duplicado: falha de validação")
     void deveFalharQuandoCpfDuplicado() throws Exception {
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("12345678901"))).thenReturn(new Cliente());
+        Mockito.when(usuarioDAO.buscarPorCpf("12345678901")).thenReturn(new Cliente());
 
         ValidationException ex = assertThrows(ValidationException.class,
                 () -> clienteService.cadastrarNovoCliente(clienteBaseValido, "Senha123"));
@@ -80,7 +78,7 @@ public class ClienteServiceCadastrarNovoClienteFuncionalTest {
     @DisplayName("CPF formato inválido: limite e equivalência")
     void deveFalharCpfFormatoInvalido() throws Exception {
         clienteBaseValido.setCpf("12345");
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("12345"))).thenReturn(null);
+        Mockito.when(usuarioDAO.buscarPorCpf("12345")).thenReturn(null);
 
         ValidationException ex = assertThrows(ValidationException.class,
                 () -> clienteService.cadastrarNovoCliente(clienteBaseValido, "Senha123"));
@@ -92,7 +90,7 @@ public class ClienteServiceCadastrarNovoClienteFuncionalTest {
     @DisplayName("Email inválido: sem arroba")
     void deveFalharEmailInvalido() throws Exception {
         clienteBaseValido.setEmail("email.invalido.com");
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("12345678901"))).thenReturn(null);
+        Mockito.when(usuarioDAO.buscarPorCpf("12345678901")).thenReturn(null);
 
         ValidationException ex = assertThrows(ValidationException.class,
                 () -> clienteService.cadastrarNovoCliente(clienteBaseValido, "Senha123"));
@@ -104,17 +102,17 @@ public class ClienteServiceCadastrarNovoClienteFuncionalTest {
     void deveAceitarExatamente18Anos() throws Exception {
         // Limite aceito: 18 anos exatos
         clienteBaseValido.setDataNascimento(LocalDate.now().minusYears(18));
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("12345678901"))).thenReturn(null);
+        Mockito.when(usuarioDAO.buscarPorCpf("12345678901")).thenReturn(null);
 
         assertDoesNotThrow(() -> clienteService.cadastrarNovoCliente(clienteBaseValido, "Senha123"));
-        Mockito.verify(usuarioDAO).cadastrarCliente(eq(clienteBaseValido));
+        Mockito.verify(usuarioDAO).cadastrarCliente((clienteBaseValido));
     }
 
     @Test
     @DisplayName("Idade menor que 18: falha de validação")
     void deveFalharMenorQue18() throws Exception {
         clienteBaseValido.setDataNascimento(LocalDate.now().minusYears(17));
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("12345678901"))).thenReturn(null);
+        Mockito.when(usuarioDAO.buscarPorCpf("12345678901")).thenReturn(null);
 
         ValidationException ex = assertThrows(ValidationException.class,
                 () -> clienteService.cadastrarNovoCliente(clienteBaseValido, "Senha123"));
@@ -125,7 +123,7 @@ public class ClienteServiceCadastrarNovoClienteFuncionalTest {
     @DisplayName("Renda negativa: falha de validação")
     void deveFalharRendaNegativa() throws Exception {
         clienteBaseValido.setRenda(-0.01);
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("12345678901"))).thenReturn(null);
+        Mockito.when(usuarioDAO.buscarPorCpf("12345678901")).thenReturn(null);
 
         ValidationException ex = assertThrows(ValidationException.class,
                 () -> clienteService.cadastrarNovoCliente(clienteBaseValido, "Senha123"));
@@ -136,7 +134,7 @@ public class ClienteServiceCadastrarNovoClienteFuncionalTest {
     @DisplayName("Senha fraca: não atende ao padrão")
     void deveFalharSenhaFraca() throws Exception {
         clienteBaseValido.setSenha("abcdefg"); // sem número e <8
-        Mockito.when(usuarioDAO.buscarPorCpf(eq("12345678901"))).thenReturn(null);
+        Mockito.when(usuarioDAO.buscarPorCpf(("12345678901"))).thenReturn(null);
 
         ValidationException ex = assertThrows(ValidationException.class,
                 () -> clienteService.cadastrarNovoCliente(clienteBaseValido, "abcdefg"));
