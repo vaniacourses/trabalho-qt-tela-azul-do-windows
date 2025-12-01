@@ -10,13 +10,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.UUID;
 
 /**
  * Teste de sistema (fim-a-fim) exercitando cadastro, login e atualização de senha.
  */
-public class ClienteServiceSistemaTest {
+class ClienteServiceSistemaTest {
 
     // URL padrão; pode ser sobrescrita via propriedade/variável BASE_URL
     private static final String DEFAULT_URL = "http://localhost:8080/banco-atm";
@@ -129,7 +128,9 @@ public class ClienteServiceSistemaTest {
         WebElement el = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         try {
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center', inline:'center'});", el);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        	// interrupcao planejada
+        }
         wait.until(ExpectedConditions.elementToBeClickable(el));
         try {
             el.click();
@@ -142,6 +143,7 @@ public class ClienteServiceSistemaTest {
         try {
             Thread.sleep(500);
         } catch (InterruptedException ignored) {
+        	// interrupcao planejada
         }
     }
 
@@ -155,7 +157,6 @@ public class ClienteServiceSistemaTest {
     }
 
     private String gerarCpfFake() {
-        String base = UUID.randomUUID().toString().replaceAll("[^0-9]", "").substring(0, 11);
-        return base;
+        return UUID.randomUUID().toString().replaceAll("[^0-9]", "").substring(0, 11);
     }
 }
