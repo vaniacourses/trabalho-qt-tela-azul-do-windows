@@ -3,7 +3,6 @@ package br.uff.ic.grupo6.banco.integracao;
 import br.uff.ic.grupo6.banco.dao.UsuarioDAO;
 import br.uff.ic.grupo6.banco.model.Cliente;
 import br.uff.ic.grupo6.banco.service.ClienteService;
-import br.uff.ic.grupo6.banco.service.exception.ValidationException;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
@@ -29,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Este teste insere um cliente, recupera, valida campos, atualiza email e senha
  * e por fim exclui o cliente (opcional), tudo usando DAO/Service reais.
  */
-public class UsuarioDAOClienteServiceIntegracaoTest {
+class UsuarioDAOClienteServiceIntegracaoTest {
 
     private UsuarioDAO usuarioDAO;
     private ClienteService clienteService;
