@@ -63,7 +63,7 @@ class SaqueServletMutacaoTest {
     }
 
     @Test
-    @DisplayName("Mata mutante: Remoção do 'contaCliente.sacar()'")
+    @DisplayName("Remoção do 'contaCliente.sacar()'")
     void deveAtualizarSaldoEmMemoriaAposSucesso() throws Exception {
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute("usuarioLogado")).thenReturn(clienteLogado);
@@ -77,7 +77,7 @@ class SaqueServletMutacaoTest {
     }
 
     @Test
-    @DisplayName("Mata mutante: Remoção da validação de Login (if null)")
+    @DisplayName("Remoção da validação de Login (if null)")
     void deveBloquearSeUsuarioNulo() throws Exception {
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute("usuarioLogado")).thenReturn(null);
@@ -89,7 +89,7 @@ class SaqueServletMutacaoTest {
     }
 
     @Test
-    @DisplayName("Mata mutante: Remoção da validação de Conta (if conta null)")
+    @DisplayName("Remoção da validação de Conta (if conta null)")
     void deveBloquearSeContaNula() throws Exception {
         clienteLogado.setConta(null);
         when(request.getSession()).thenReturn(session);
@@ -103,7 +103,7 @@ class SaqueServletMutacaoTest {
     }
 
     @Test
-    @DisplayName("Mata mutante: Alteração na captura de ValidationException")
+    @DisplayName("Alteração na captura de ValidationException")
     void deveRedirecionarComMensagemExataDoService() throws Exception {
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute("usuarioLogado")).thenReturn(clienteLogado);
@@ -123,7 +123,7 @@ class SaqueServletMutacaoTest {
     }
 
     @Test
-    @DisplayName("Mata mutante: Remoção do setCharacterEncoding")
+    @DisplayName("Remoção do setCharacterEncoding")
     void deveDefinirEncodingAntesDeLerParametros() throws Exception {
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute("usuarioLogado")).thenReturn(null);
@@ -132,7 +132,7 @@ class SaqueServletMutacaoTest {
     }
     
     @Test
-    @DisplayName("Mata mutante: Troca de parseDouble por outro método ou remoção de try/catch NumberFormat")
+    @DisplayName("Troca de parseDouble por outro método ou remoção de try/catch NumberFormat")
     void deveCapturarErroDeFormatacao() throws Exception {
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute("usuarioLogado")).thenReturn(clienteLogado);
