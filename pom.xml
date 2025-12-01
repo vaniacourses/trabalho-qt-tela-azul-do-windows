@@ -51,20 +51,31 @@
             <scope>test</scope>
         </dependency>
         
+<<<<<<< HEAD
         <dependency>
 		    <groupId>org.junit.jupiter</groupId>
 		    <artifactId>junit-jupiter-engine</artifactId>
 		    <version>5.10.0</version>
 		    <scope>test</scope>
 		</dependency>
+=======
+        <!-- Engine do JUnit 5 (Adicionada para garantir a execução correta via Maven/IDE) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope>
+        </dependency>
+>>>>>>> cb50c3651d20466f989b64b8e24254f5a7e9b278
 
-		<!-- Dependência do Mockito, para a criação de 'mocks' e para isolar as dependências nos testes unitários. -->
+		<!-- Dependência do Mockito, para a criação de 'mocks' nos testes unitários. -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>5.5.0</version>
             <scope>test</scope>
         </dependency>
+<<<<<<< HEAD
         
         <!-- Dependência do Selenium, para testes automatizados -->
         <dependency>
@@ -73,6 +84,29 @@
             <version>4.18.1</version> <!-- Versão estável recente -->
         </dependency>
    
+=======
+
+        <!-- =================================================================== -->
+        <!-- NOVAS DEPENDÊNCIAS PARA TESTES DE SISTEMA (SELENIUM) -->
+        <!-- =================================================================== -->
+
+        <!-- Selenium Java: A biblioteca principal para automação do navegador -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.16.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- WebDriverManager: Gerencia automaticamente o download do driver do Chrome/Firefox -->
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>5.6.3</version>
+            <scope>test</scope>
+        </dependency>
+
+>>>>>>> cb50c3651d20466f989b64b8e24254f5a7e9b278
     </dependencies>
 
     <build>
@@ -88,8 +122,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin para empacotar a aplicação como um arquivo WAR. 
-                 Implantação em servidores GlassFish. -->
+            <!-- Plugin para empacotar a aplicação como um arquivo WAR. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
