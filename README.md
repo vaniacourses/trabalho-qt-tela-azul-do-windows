@@ -102,11 +102,13 @@ Antes de começar, baixe e instale os seguintes softwares:
 
 **Grupo:** Tela Azul do Windows
 
-* Felipe Lopes
-* Israel Bousquet
-* Marcos Rodrigues
-* Renato Luiz
-* Rodrigo Dias
+* **Felipe Lopes:** adição de complexidade ciclomática para classe servlet, testes individuais
+* **Israel Bousquet:** cadastro de projeto de teste (com inclusao dos casos de teste) no testlink, apresentação, correção de conflitos, testes individuais
+* **Marcos Rodrigues:** testes individuais, ajuste no documento de teste
+* **Renato Luiz:** configuração do projeto, criação do plano de testes, testes individuais
+* **Rodrigo Dias:** testes individuais
+
+> **Nota sobre Testes Individuais:** Refere-se à realização completa dos testes estruturais, funcionais, de sistema, integração e unitários para os módulos atribuídos a cada aluno. Inclui também a documentação das evidências de teste, documentação da utilização do Selenium e a adição dos casos de teste da segunda entrega nos documentos necessários.
 
 ---
 
