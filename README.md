@@ -107,3 +107,17 @@ Antes de começar, baixe e instale os seguintes softwares:
 * Marcos Rodrigues
 * Renato Luiz
 * Rodrigo Dias
+
+---
+
+## Política de Branch e Pull Requests
+
+- A branch principal do repositório foi alterada para `origin/dev` devido a conflitos recorrentes de merge na `main`.
+- Para aumentar a segurança e previsibilidade, o fluxo passou a aceitar mudanças apenas via **Pull Requests**:
+    - Commits diretos na branch principal foram desabilitados.
+    - Toda alteração deve abrir PR para revisão e integração controlada.
+- Recomendações de ajuste local:
+    - `git fetch origin`
+    - `git checkout dev`
+    - `git branch --set-upstream-to=origin/dev dev`
+    - `git pull`
