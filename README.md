@@ -12,6 +12,7 @@ Todos os documentos e artefatos de teste gerados para o projeto estão disponív
 * **Planilha de Casos de Teste (Manuais e Unitários):** [Link](https://docs.google.com/spreadsheets/d/1hIZYAHNf7_Ws7WwVpP2s7LdwW3uqgnCW/)
 * **Pasta de Evidências (Screenshots e Logs):** [Link](https://drive.google.com/drive/folders/1dq5cM1rdKQ8Lkx3HSO6in07fJbf6mxd-)
 * **Apresentação PPTX (Entrega 1):** [Link](https://docs.google.com/presentation/d/1cnJ-3ldlAAhiPNQFaiI9VJ19VoUX42sp/)
+* **Apresentação PPTX (Entrega 2):** [Link](https://docs.google.com/presentation/d/1ngVs-uTWTDKFgDAgJoBbHHID5hvVSSHZ/)
 * **Instruções Oficiais do Trabalho (PDF):** [Link](https://docs.google.com/document/d/1lPZmF6VMtyhSkKBZBjU5IbR2nYfEZ-alYI1ak89zXL8/)
 * **Repositório GitHub (Código da Entrega 1):** [Link](https://github.com/renatouff/trabalho-banco-atm)
 * **Repositório GitHub (Código da Entrega 2):** [Link](https://github.com/vaniacourses/trabalho-qt-tela-azul-do-windows)
