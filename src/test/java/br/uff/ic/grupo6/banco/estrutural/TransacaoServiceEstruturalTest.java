@@ -15,7 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.SQLException;
+
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
