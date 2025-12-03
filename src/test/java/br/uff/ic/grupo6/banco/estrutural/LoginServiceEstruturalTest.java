@@ -26,7 +26,7 @@ import java.sql.SQLException;
  * Cobre as arestas do método autenticar(cpf, senha) com complexidade ciclomática 10.
  */
 @ExtendWith(MockitoExtension.class)
-public class LoginServiceEstruturalTest {
+class LoginServiceEstruturalTest {
 
     // 1. Simula o DAO (banco de dados)
     @Mock

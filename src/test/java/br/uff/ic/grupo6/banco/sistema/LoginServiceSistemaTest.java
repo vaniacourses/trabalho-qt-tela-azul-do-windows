@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * O servidor deve estar rodando em http://localhost:8080/banco-atm/login.jsp.
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class LoginServiceSistemaTest {
+class LoginServiceSistemaTest {
 
     private WebDriver driver;
     private WebDriverWait wait;
