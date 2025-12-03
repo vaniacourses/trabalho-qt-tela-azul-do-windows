@@ -162,4 +162,46 @@ class SaqueServiceMutacaoTest {
             verify(contaDAO, times(1)).realizarSaque(1, 100.0);
         }
     }
+
+    // --- NOVOS TESTES (10, 11, 12) ---
+
+    // 10 — Matar mutante que altera limite horário (ex: >= 22 para > 22)
+    @Test
+    void deveFalharSaqueAltoExatamenteAs22h() {
+        // Regra: Bloqueia se >= 22:00. 
+        // Se o mutante mudar para > 22:00, o horário 22:00 passaria. O teste garante que falha.
+        LocalTime horarioLimite = LocalTime.of(22, 0);
+
+        try (MockedStatic<LocalTime> mockedTime = Mockito.mockStatic(LocalTime.class, Mockito.CALLS_REAL_METHODS)) {
+            mockedTime.when(LocalTime::now).thenReturn(horarioLimite);
+
+            assertThrows(ValidationException.class, 
+                () -> transacaoService.realizarSaque(conta, 1500.0));
+        }
+    }
+
+    // 11 — Matar mutante que altera limite de valor noturno (ex: > 1000 para >= 1000)
+    @Test
+    void devePermitirSaqueExatoDe1000DeNoite() throws Exception {
+        // Regra: Bloqueia apenas se MAIOR que 1000.
+        // Se o mutante mudar para >= 1000, o valor 1000 seria bloqueado. O teste garante que passa.
+        LocalTime horarioNoturno = LocalTime.of(23, 0);
+
+        try (MockedStatic<LocalTime> mockedTime = Mockito.mockStatic(LocalTime.class, Mockito.CALLS_REAL_METHODS)) {
+            mockedTime.when(LocalTime::now).thenReturn(horarioNoturno);
+            when(contaDAO.realizarSaque(anyInt(), anyDouble())).thenReturn(new Transacao());
+
+            assertDoesNotThrow(() -> transacaoService.realizarSaque(conta, 1000.0));
+        }
+    }
+
+    // 12 — Matar mutante que remove a verificação de saldo insuficiente (Delete Statement)
+    @Test
+    void deveFalharQuandoSaldoInsuficiente() {
+        // Se alguém remover o "if (saldo < valor)", este teste falha.
+        when(conta.getSaldo()).thenReturn(100.0);
+
+        assertThrows(ValidationException.class, 
+            () -> transacaoService.realizarSaque(conta, 200.0));
+    }
 }
