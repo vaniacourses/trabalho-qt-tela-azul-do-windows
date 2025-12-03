@@ -45,21 +45,15 @@ class TransacaoServiceMutacaoTest {
         when(clienteOrigem.getConta()).thenReturn(contaOrigem);
     }
 
-    // ============================================================
     // Validação 1 — valor > 0
-    // ============================================================
     @Test
     void deveFalharQuandoValorNaoForPositivo() {
-
         assertThrows(ValidationException.class, () ->
                 service.prepararTransferencia(clienteOrigem, "001", "1234", 0)
         );
     }
 
-
-    // ============================================================
     // Validação 2 — saldo insuficiente
-    // ============================================================
     @Test
     void deveFalharQuandoSaldoInsuficiente() {
         when(contaOrigem.getSaldo()).thenReturn(500.0);
@@ -69,9 +63,7 @@ class TransacaoServiceMutacaoTest {
         );
     }
 
-    // ============================================================
     // Validação 3 — conta destino inexistente
-    // ============================================================
     @Test
     void deveFalharQuandoContaDestinoNaoExistir() throws SQLException {
         when(contaOrigem.getSaldo()).thenReturn(5000.0);
@@ -84,9 +76,7 @@ class TransacaoServiceMutacaoTest {
         );
     }
 
-    // ============================================================
-    // Validação 4 — transferência para mesma conta
-    // ============================================================
+    // Validação 4 — mesma conta
     @Test
     void deveFalharQuandoTransferirParaMesmaConta() throws SQLException {
 
@@ -106,13 +96,7 @@ class TransacaoServiceMutacaoTest {
     }
 
 
-
-
-
-
-    // ============================================================
     // Validação 5 — limite máximo 5000
-    // ============================================================
     @Test
     void deveFalharQuandoExcederLimiteMaximoDe5000() throws SQLException {
         when(contaOrigem.getSaldo()).thenReturn(10000.0);
@@ -125,9 +109,8 @@ class TransacaoServiceMutacaoTest {
         );
     }
 
-    // ============================================================
+
     // Validação 6 — agências proibidas
-    // ============================================================
     @Test
     void deveFalharQuandoAgenciaForBloqueada() throws SQLException {
         when(contaOrigem.getSaldo()).thenReturn(5000.0);
@@ -140,9 +123,8 @@ class TransacaoServiceMutacaoTest {
         );
     }
 
-    // ============================================================
+  
     // Validação 7 — baixa renda ultrapassando limite
-    // ============================================================
     @Test
     void deveFalharQuandoClienteBaixaRendaUltrapassarLimite() throws SQLException {
 
@@ -158,25 +140,19 @@ class TransacaoServiceMutacaoTest {
         );
     }
 
-
-    // ============================================================
-    // Validação 8 — conta salário inicia com '9'
-    // ============================================================
+    
+    // Validação 8 — conta salário começando com 9
     @Test
     void deveFalharQuandoContaDestinoForContaSalario() throws SQLException {
 
         when(contaDAO.buscarContaPorAgenciaENumeroDaConta("001", "91234"))
-                .thenAnswer(invocation -> {
-
-                    return mock(Conta.class, invocationOnMock -> {
-
-                        if (invocationOnMock.getMethod().getName().equals("getNumero")) {
-                            return "91234";
-                        }
-
-                        return null;
-                    });
-                });
+                .thenAnswer(invocation ->
+                        mock(Conta.class, call -> {
+                            if (call.getMethod().getName().equals("getNumero"))
+                                return "91234";
+                            return null;
+                        })
+                );
 
         assertThrows(ValidationException.class, () ->
                 service.prepararTransferencia(clienteOrigem, "001", "91234", 500)
@@ -185,4 +161,74 @@ class TransacaoServiceMutacaoTest {
 
 
 
+
+    // ===========  TESTES EXTRA  ============
+
+    private void prepararCenarioTransferenciaValida(
+            double saldoOrigem,
+            String agencia,
+            String conta,
+            double renda,
+            Conta destino
+    ) throws SQLException {
+
+        when(contaOrigem.getSaldo()).thenReturn(saldoOrigem);
+
+        if (renda >= 0)
+            when(clienteOrigem.getRenda()).thenReturn(renda);
+
+        when(contaDAO.buscarContaPorAgenciaENumeroDaConta(agencia, conta))
+                .thenReturn(destino);
+
+        when(usuarioDAO.buscarClientePorIdConta(anyInt()))
+                .thenReturn(new Cliente());
+    }
+
+    private Conta mockContaDestino(int id, String numero) {
+        Conta c = mock(Conta.class);
+        when(c.getId()).thenReturn(id);
+        when(c.getNumero()).thenReturn(numero);
+        return c;
+    }
+
+
+    @Test
+    void deveAceitarValorMinimoPositivoExpondoMutante() throws SQLException {
+        prepararCenarioTransferenciaValida(100, "001", "1234", 3000, mockContaDestino(2, "1234"));
+
+        assertDoesNotThrow(() ->
+                service.prepararTransferencia(clienteOrigem, "001", "1234", 0.01)
+        );
+    }
+
+    // Linha 168 — valor > saldo 
+    @Test
+    void devePermitirTransferenciaQuandoValorIgualAoSaldo() throws SQLException {
+        prepararCenarioTransferenciaValida(500, "001", "1234", 3000, mockContaDestino(2, "1234"));
+
+        assertDoesNotThrow(() ->
+                service.prepararTransferencia(clienteOrigem, "001", "1234", 500)
+        );
+    }
+
+    // Linha 176 — baixa renda limite de 1000 
+    @Test
+    void devePermitirBaixaRendaQuandoValorExatamente1000() throws SQLException {
+        prepararCenarioTransferenciaValida(5000, "001", "2222", 1500, mockContaDestino(3, "2222"));
+
+        assertDoesNotThrow(() ->
+                service.prepararTransferencia(clienteOrigem, "001", "2222", 1000)
+        );
+    }
+
+
+    // Linha 180 — limite 5000
+    @Test
+    void devePermitirTransferenciaDeExatamente5000() throws SQLException {
+        prepararCenarioTransferenciaValida(10000, "001", "1111", 3000, mockContaDestino(4, "1111"));
+
+        assertDoesNotThrow(() ->
+                service.prepararTransferencia(clienteOrigem, "001", "1111", 5000)
+        );
+    }
 }
