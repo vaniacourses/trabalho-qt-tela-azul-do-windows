@@ -19,172 +19,147 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import org.mockito.junit.jupiter.MockitoSettings; 
+import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class TransacaoServiceMutacaoTest {
 
-    @Mock
-    private ContaDAO contaDAO;
+	@Mock
+	private ContaDAO contaDAO;
 
-    @Mock
-    private UsuarioDAO usuarioDAO;
+	@Mock
+	private UsuarioDAO usuarioDAO;
 
-    @InjectMocks
-    private TransacaoService service;
+	@InjectMocks
+	private TransacaoService service;
 
-    private Cliente clienteOrigem;
-    private Conta contaOrigem;
-    private Conta contaDestino;
-    private Cliente clienteDestino;
+	private Cliente clienteOrigem;
+	private Conta contaOrigem;
+	private Conta contaDestino;
+	private Cliente clienteDestino;
 
-    @BeforeEach
-    void setup() {
-        contaOrigem = mock(Conta.class);
-        when(contaOrigem.getId()).thenReturn(1);
-        when(contaOrigem.getSaldo()).thenReturn(3000.0);
-        when(contaOrigem.getNumero()).thenReturn("12345");
+	@BeforeEach
+	void setup() {
+		// Mocks básicos
+		contaOrigem = mock(Conta.class);
+		clienteOrigem = mock(Cliente.class);
+		contaDestino = mock(Conta.class);
+		clienteDestino = mock(Cliente.class);
 
-        clienteOrigem = mock(Cliente.class);
-        when(clienteOrigem.getConta()).thenReturn(contaOrigem);
-        when(clienteOrigem.getRenda()).thenReturn(3000.0);
+		// --- CORREÇÃO: Adicionado lenient() em todos os stubs do setup pra rodar os
+		// testes JUnit ---
 
-        contaDestino = mock(Conta.class);
-        when(contaDestino.getId()).thenReturn(2);
-        when(contaDestino.getNumero()).thenReturn("56789");
+		lenient().when(contaOrigem.getId()).thenReturn(1);
+		lenient().when(contaOrigem.getSaldo()).thenReturn(3000.0);
+		lenient().when(contaOrigem.getNumero()).thenReturn("12345");
 
-        clienteDestino = mock(Cliente.class);
-    }
+		lenient().when(clienteOrigem.getConta()).thenReturn(contaOrigem);
+		lenient().when(clienteOrigem.getRenda()).thenReturn(3000.0);
 
-    // 1 — Teste ultra forte para validar fronteira valor == 0
-    @Test
-    void deveFalharQuandoValorIgualZero() {
-        ValidationException ex = assertThrows(
-                ValidationException.class,
-                () -> service.prepararTransferencia(clienteOrigem, "1111", "56789", 0)
-        );
+		lenient().when(contaDestino.getId()).thenReturn(2);
+		lenient().when(contaDestino.getNumero()).thenReturn("56789");
+	}
 
-        assertEquals("Valor deve ser positivo", ex.getMessage(),
-                "Mutação que troca valor <= 0 por valor < 0 deve ser detectada");
-    }
+	// 1 — Teste ultra forte para validar fronteira valor == 0
+	@Test
+	void deveFalharQuandoValorIgualZero() {
+		ValidationException ex = assertThrows(ValidationException.class,
+				() -> service.prepararTransferencia(clienteOrigem, "1111", "56789", 0));
 
-    // 2 — Teste para matar mutação em saldo insuficiente (>= ao invés de >)
-    @Test
-    void deveFalharQuandoValorIgualAoSaldo() throws Exception {
-        when(contaOrigem.getSaldo()).thenReturn((double) 200);
+		assertEquals("Valor deve ser positivo", ex.getMessage(),
+				"Mutação que troca valor <= 0 por valor < 0 deve ser detectada");
+	}
 
-        // conta destino precisa existir
-        when(contaDAO.buscarContaPorAgenciaENumeroDaConta("1111", "56789"))
-                .thenReturn(contaDestino);
-        when(usuarioDAO.buscarClientePorIdConta(2))
-                .thenReturn(clienteDestino);
+	// 2 — Teste para matar mutação em saldo insuficiente (>= ao invés de >)
+	@Test
+	void deveFalharQuandoValorIgualAoSaldo() throws Exception {
+		when(contaOrigem.getSaldo()).thenReturn((double) 200);
 
-        ValidationException ex = assertThrows(
-                ValidationException.class,
-                () -> service.prepararTransferencia(clienteOrigem, "1111", "56789", 300)
-        );
+		// conta destino precisa existir
+		when(contaDAO.buscarContaPorAgenciaENumeroDaConta("1111", "56789")).thenReturn(contaDestino);
+		when(usuarioDAO.buscarClientePorIdConta(2)).thenReturn(clienteDestino);
 
-        assertEquals("Saldo insuficiente", ex.getMessage(),
-                "Mutação que troca saldo < valor por saldo <= valor deve morrer");
-    }
+		ValidationException ex = assertThrows(ValidationException.class,
+				() -> service.prepararTransferencia(clienteOrigem, "1111", "56789", 300));
 
-    // 3 — Matar mutante que remove verificação de contaDestino nula
-    @Test
-    void deveLancarErroSeContaDestinoForNull() throws Exception {
-        when(contaDAO.buscarContaPorAgenciaENumeroDaConta("1111", "56789"))
-                .thenReturn(null);
+		assertEquals("Saldo insuficiente", ex.getMessage(),
+				"Mutação que troca saldo < valor por saldo <= valor deve morrer");
+	}
 
-        ValidationException ex = assertThrows(
-                ValidationException.class,
-                () -> service.prepararTransferencia(clienteOrigem, "1111", "56789", 100)
-        );
+	// 3 — Matar mutante que remove verificação de contaDestino nula
+	@Test
+	void deveLancarErroSeContaDestinoForNull() throws Exception {
+		when(contaDAO.buscarContaPorAgenciaENumeroDaConta("1111", "56789")).thenReturn(null);
 
-        assertEquals("Conta de destino nao encontrada", ex.getMessage(),
-                "Mutante que remove este if deve ser morto");
-    }
+		ValidationException ex = assertThrows(ValidationException.class,
+				() -> service.prepararTransferencia(clienteOrigem, "1111", "56789", 100));
 
-    // 4 — Matar mutante que troca == por != nas contas iguais
-    @Test
-    void deveFalharSeContaDestinoIgualOrigem() throws Exception {
-        when(contaDestino.getId()).thenReturn(1);
-        when(contaDAO.buscarContaPorAgenciaENumeroDaConta("1111", "56789"))
-                .thenReturn(contaDestino);
-        when(usuarioDAO.buscarClientePorIdConta(1))
-                .thenReturn(clienteDestino);
+		assertEquals("Conta de destino nao encontrada", ex.getMessage(), "Mutante que remove este if deve ser morto");
+	}
 
-        ValidationException ex = assertThrows(
-                ValidationException.class,
-                () -> service.prepararTransferencia(clienteOrigem, "1111", "56789", 100)
-        );
+	// 4 — Matar mutante que troca == por != nas contas iguais
+	@Test
+	void deveFalharSeContaDestinoIgualOrigem() throws Exception {
+		when(contaDestino.getId()).thenReturn(1);
+		when(contaDAO.buscarContaPorAgenciaENumeroDaConta("1111", "56789")).thenReturn(contaDestino);
+		when(usuarioDAO.buscarClientePorIdConta(1)).thenReturn(clienteDestino);
 
-        assertEquals("Conta de destino nao pode ser a mesma de origem", ex.getMessage());
-    }
+		ValidationException ex = assertThrows(ValidationException.class,
+				() -> service.prepararTransferencia(clienteOrigem, "1111", "56789", 100));
 
-    // 5 — Limite máximo → matar mutante que muda > 5000 para >= 5000
-    @Test
-    void deveFalharAoExcederLimiteTransferencia() throws Exception {
-        when(contaOrigem.getSaldo()).thenReturn(10000.0);
-        when(contaDAO.buscarContaPorAgenciaENumeroDaConta("1111", "56789"))
-                .thenReturn(contaDestino);
-        when(usuarioDAO.buscarClientePorIdConta(2))
-                .thenReturn(clienteDestino);
+		assertEquals("Conta de destino nao pode ser a mesma de origem", ex.getMessage());
+	}
 
-        ValidationException ex = assertThrows(
-                ValidationException.class,
-                () -> service.prepararTransferencia(clienteOrigem, "1111", "56789", 5001)
-        );
+	// 5 — Limite máximo → matar mutante que muda > 5000 para >= 5000
+	@Test
+	void deveFalharAoExcederLimiteTransferencia() throws Exception {
+		when(contaOrigem.getSaldo()).thenReturn(10000.0);
+		when(contaDAO.buscarContaPorAgenciaENumeroDaConta("1111", "56789")).thenReturn(contaDestino);
+		when(usuarioDAO.buscarClientePorIdConta(2)).thenReturn(clienteDestino);
 
-        assertEquals("O limite maximo por transferencia e de R$ 5.000,00.", ex.getMessage());
-    }
+		ValidationException ex = assertThrows(ValidationException.class,
+				() -> service.prepararTransferencia(clienteOrigem, "1111", "56789", 5001));
 
-    // 6 — Matar mutante que remove verificação de agência bloqueada
-    @Test
-    void deveFalharParaAgenciaBloqueada() throws Exception {
-        when(contaDAO.buscarContaPorAgenciaENumeroDaConta("9999", "56789"))
-                .thenReturn(contaDestino);
-        when(usuarioDAO.buscarClientePorIdConta(2))
-                .thenReturn(clienteDestino);
+		assertEquals("O limite maximo por transferencia e de R$ 5.000,00.", ex.getMessage());
+	}
 
-        ValidationException ex = assertThrows(
-                ValidationException.class,
-                () -> service.prepararTransferencia(clienteOrigem, "9999", "56789", 200)
-        );
+	// 6 — Matar mutante que remove verificação de agência bloqueada
+	@Test
+	void deveFalharParaAgenciaBloqueada() throws Exception {
+		when(contaDAO.buscarContaPorAgenciaENumeroDaConta("9999", "56789")).thenReturn(contaDestino);
+		when(usuarioDAO.buscarClientePorIdConta(2)).thenReturn(clienteDestino);
 
-        assertEquals("Nao e possível transferir para esta agencia.", ex.getMessage());
-    }
+		ValidationException ex = assertThrows(ValidationException.class,
+				() -> service.prepararTransferencia(clienteOrigem, "9999", "56789", 200));
 
-    // 7 — Matar mutante que ignora limite de baixa renda
-    @Test
-    void deveFalharParaClienteBaixaRendaValorAlto() throws Exception {
-        when(clienteOrigem.getRenda()).thenReturn(1500.0);
-        when(contaDAO.buscarContaPorAgenciaENumeroDaConta("1111", "56789"))
-                .thenReturn(contaDestino);
-        when(usuarioDAO.buscarClientePorIdConta(2))
-                .thenReturn(clienteDestino);
+		assertEquals("Nao e possível transferir para esta agencia.", ex.getMessage());
+	}
 
-        ValidationException ex = assertThrows(
-                ValidationException.class,
-                () -> service.prepararTransferencia(clienteOrigem, "1111", "56789", 1500)
-        );
+	// 7 — Matar mutante que ignora limite de baixa renda
+	@Test
+	void deveFalharParaClienteBaixaRendaValorAlto() throws Exception {
+		when(clienteOrigem.getRenda()).thenReturn(1500.0);
+		when(contaDAO.buscarContaPorAgenciaENumeroDaConta("1111", "56789")).thenReturn(contaDestino);
+		when(usuarioDAO.buscarClientePorIdConta(2)).thenReturn(clienteDestino);
 
-        assertEquals(
-                "Clientes com renda inferior a R$ 2.000,00 tem limite de R$ 1.000,00 por transferencia.",
-                ex.getMessage()
-        );
-    }
+		ValidationException ex = assertThrows(ValidationException.class,
+				() -> service.prepararTransferencia(clienteOrigem, "1111", "56789", 1500));
 
-    // 8 — Matar mutante que remove verificação de conta salário
-    @Test
-    void deveFalharParaContaSalario() throws Exception {
-        when(contaDestino.getNumero()).thenReturn("91234");
-        when(contaDAO.buscarContaPorAgenciaENumeroDaConta("1111", "91234"))
-                .thenReturn(contaDestino);
+		assertEquals("Clientes com renda inferior a R$ 2.000,00 tem limite de R$ 1.000,00 por transferencia.",
+				ex.getMessage());
+	}
 
-        ValidationException ex = assertThrows(
-                ValidationException.class,
-                () -> service.prepararTransferencia(clienteOrigem, "1111", "91234", 100)
-        );
+	// 8 — Matar mutante que remove verificação de conta salário
+	@Test
+	void deveFalharParaContaSalario() throws Exception {
+		when(contaDestino.getNumero()).thenReturn("91234");
+		when(contaDAO.buscarContaPorAgenciaENumeroDaConta("1111", "91234")).thenReturn(contaDestino);
 
-        assertEquals("Nao e permitido transferir para Contas Salario (iniciadas com 9).",
-                ex.getMessage());
-    }
+		ValidationException ex = assertThrows(ValidationException.class,
+				() -> service.prepararTransferencia(clienteOrigem, "1111", "91234", 100));
+
+		assertEquals("Nao e permitido transferir para Contas Salario (iniciadas com 9).", ex.getMessage());
+	}
 }
