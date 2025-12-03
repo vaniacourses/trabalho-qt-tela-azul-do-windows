@@ -64,6 +64,14 @@ class SaqueServiceMutacaoTest {
             () -> transacaoService.realizarSaque(conta, 0.0));
     }
 
+    @Test
+    void deveFalharQuandoValorNegativo() {
+        // Mata mutante: if (valor <= 0) -> if (valor == 0)
+        // Se a condição mudar para apenas igual a zero, negativos passariam. Este teste impede isso.
+        assertThrows(ValidationException.class, 
+            () -> transacaoService.realizarSaque(conta, -10.0));
+    }
+
     // --- LINHA 110: Limite Máximo 2000 ---
 
     @Test
@@ -108,6 +116,20 @@ class SaqueServiceMutacaoTest {
             when(contaDAO.realizarSaque(anyInt(), anyDouble())).thenReturn(new Transacao());
 
             assertDoesNotThrow(() -> transacaoService.realizarSaque(conta, 10.0));
+        }
+    }
+
+    @Test
+    void devePermitirSaqueAcimaDoMinimo() throws Exception {
+        // Mata mutante: if (valor < 10.00) -> if (valor < 20.00) ou inversão de lógica
+        // Garante que valores válidos acima do mínimo continuam passando.
+        LocalTime horarioComercial = LocalTime.of(14, 0);
+
+        try (MockedStatic<LocalTime> mockedTime = Mockito.mockStatic(LocalTime.class, Mockito.CALLS_REAL_METHODS)) {
+            mockedTime.when(LocalTime::now).thenReturn(horarioComercial);
+            when(contaDAO.realizarSaque(anyInt(), anyDouble())).thenReturn(new Transacao());
+
+            assertDoesNotThrow(() -> transacaoService.realizarSaque(conta, 20.0));
         }
     }
 
