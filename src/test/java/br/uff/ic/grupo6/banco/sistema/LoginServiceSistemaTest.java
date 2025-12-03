@@ -1,163 +1,167 @@
 package br.uff.ic.grupo6.banco.sistema;
 
-import br.uff.ic.grupo6.banco.dao.UsuarioDAO;
-import br.uff.ic.grupo6.banco.model.Usuario;
-import br.uff.ic.grupo6.banco.service.LoginService;
-// Assumindo que você tem uma exceção de validação similar à do seu exemplo
-import br.uff.ic.grupo6.banco.service.exception.ValidationException; 
+import org.junit.jupiter.api.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.TimeoutException; // Import necessário para tratar erros de tempo limite
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
- * Testes de Unidade (Estruturais) para a classe LoginService, usando MockitoExtension.
- * Objetivo: Testar a lógica de autenticação e validação do serviço.
+ * Testes de Sistema (End-to-End) para a tela de Login.
+ * O servidor deve estar rodando em http://localhost:8080/banco-atm/login.jsp.
  */
-@ExtendWith(MockitoExtension.class)
-public class LoginServiceEstruturalTest {
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class LoginServiceSistemaTest {
 
-    // 1. Simula o DAO (banco de dados). Não precisa mais de MockitoAnnotations.openMocks().
-    @Mock
-    private UsuarioDAO usuarioDAO;
+    private WebDriver driver;
+    private WebDriverWait wait;
 
-    // 2. Injeta o mock do DAO no LoginService.
-    @InjectMocks
-    private LoginService loginService;
+    // Constantes de URL e Paths
+    private static final String BASE_URL = "http://localhost:8080/banco-atm/login.jsp"; 
+    private static final String SUCCESS_REDIRECT_PATH = "/dashboard.jsp"; 
 
-    // Dados de teste
-    private final String CPF_VALIDO = "12345678900";
-    private final String SENHA_CORRETA = "senha123";
-    private final String SENHA_INCORRETA = "senhaerrada";
-    private final String CPF_INEXISTENTE = "99999999999";
-    private final String CPF_INVALIDO_FORMATO = "123";
-    
-    // Objeto Usuário de teste
-    // Não precisa mais de classe auxiliar porque vamos usar o Mockito para criar a instância.
-    private Usuario usuarioTeste;
+    // Dados de Teste
+    // CT-S-10: Este usuário deve existir no banco de dados.
+    private static final String CPF_VALIDO_BD = "00000000000";
+    private static final String SENHA_VALIDA_BD = "admin";
+    // CT-S-12: Este usuário deve ser inexistente.
+    private static final String CPF_INEXISTENTE = "12345678910"; 
+
+    @BeforeAll
+    static void setupClass() {
+        // Configurações de classe (como configurar o caminho do ChromeDriver)
+    }
 
     /**
-     * Configuração inicial antes de cada teste.
+     * Inicia o WebDriver (navegador Chrome) e a espera antes de cada teste.
      */
     @BeforeEach
     void setup() {
-        // CORREÇÃO: Cria uma instância MOCK de Usuario, o que é padrão para classes 'abstract'
-        // em testes estruturais e evita a necessidade da subclasse auxiliar.
-        usuarioTeste = Mockito.mock(Usuario.class);
+        driver = new ChromeDriver();
+        // Tempo máximo de espera para elementos em 10 segundos
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10)); 
+    }
+
+    /**
+     * Função para tentar fazer o login.
+     */
+    private void attemptLogin(String cpf, String senha) {
+        driver.get(BASE_URL);
+
+        // Espera a página carregar
+        try {
+            wait.until(ExpectedConditions.titleContains("Bank - Login"));
+        } catch (Exception e) {
+            tearDown(); 
+            throw new RuntimeException("Falha ao carregar a página de login. Servidor fora do ar ou URL errada.", e);
+        }
         
-        // Configura o mock do usuário (stubbing): 
-        // Define o que os métodos getLogin() e getSenha() devem retornar quando forem chamados
-        // pelo LoginService.
-        when(usuarioTeste.getLogin()).thenReturn(CPF_VALIDO);
-        when(usuarioTeste.getSenha()).thenReturn(SENHA_CORRETA);
-    }
+        // Preenche o campo CPF e Senha
+        WebElement cpfField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login")));
+        cpfField.sendKeys(cpf);
 
+        WebElement senhaField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("senha")));
+        senhaField.sendKeys(senha);
 
-    /**
-     * CT-E-01: Login com Sucesso (Caminho Feliz).
-     * Tecnica: Particionamento em Classes de Equivalência (PCE)
-     */
-    @Test
-    @DisplayName("CT-E-01: Login com Sucesso (Caminho Feliz)")
-    void cte01_loginSucesso() {
-        // ARRANJAR (Setup):
-        // 1. Simula que o DAO encontrou o usuário, retornando o mock configurado.
-        when(usuarioDAO.buscarPorCpf(CPF_VALIDO)).thenReturn(usuarioTeste);
-
-        // AGIR (Executar) e AVALIAR (Verificar):
-        // 2. Testa que a execução não lança exceção e retorna o usuário
-        assertDoesNotThrow(() -> {
-            Usuario resultado = loginService.logar(CPF_VALIDO, SENHA_CORRETA);
-            assertNotNull(resultado, "O login deveria ser bem-sucedido.");
-            assertEquals(CPF_VALIDO, resultado.getLogin(), "O login retornado deve ser o CPF correto.");
-        });
-
-        // 3. Verifica se o método de busca do DAO foi chamado
-        Mockito.verify(usuarioDAO, Mockito.times(1)).buscarPorCpf(CPF_VALIDO);
+        // Clica no botão Entrar
+        WebElement btnEntrar = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button[type='submit']")));
+        btnEntrar.click();
     }
 
     /**
-     * CT-E-02: Falha de Login (Senha Incorreta).
-     * Tecnica: PCE / Regra de Negócio
+     * CT-S-10: Login com Sucesso (Caminho Feliz).
      */
     @Test
-    @DisplayName("CT-E-02: Falha de Login (Senha Incorreta)")
-    void cte02_falhaSenhaIncorreta() {
-        // ARRANJAR (Setup):
-        // 1. Simula que o DAO encontrou o usuário (o Service chamará getSenha() no mock e a comparação falhará).
-        when(usuarioDAO.buscarPorCpf(CPF_VALIDO)).thenReturn(usuarioTeste);
+    @Order(10)
+    @DisplayName("CT-S-10: Login com Sucesso (Caminho Feliz)")
+    void cts10_loginSucesso() {
+        // Tenta fazer login com credenciais válidas
+        attemptLogin(CPF_VALIDO_BD, SENHA_VALIDA_BD);
 
-        // AGIR (Executar):
-        Usuario resultado = loginService.logar(CPF_VALIDO, SENHA_INCORRETA);
+        // Verifica o sucesso
+        try {
+            // 1. Tenta verificar se a URL mudou (esperado após um 'redirect')
+            wait.until(ExpectedConditions.urlContains(SUCCESS_REDIRECT_PATH));
+            
+            // Confirma que o dashboard foi carregado
+            assertTrue(driver.getCurrentUrl().contains(SUCCESS_REDIRECT_PATH), 
+                       "O login não redirecionou para o dashboard. URL atual: " + driver.getCurrentUrl());
+            
+        } catch (TimeoutException e) {
+            // 2. Se a URL não mudou (usando 'forward'), verifica se o título mudou.
+            try {
+                 wait.until(ExpectedConditions.titleContains("Dashboard"));
+                 System.out.println("Sucesso, mas a URL não mudou (verifique o uso de forward no Servlet). Título: " + driver.getTitle());
+                 
+            } catch (Exception ex) {
+                // Se falhar, é um erro real.
+                throw new TimeoutException("Falha no login. Verifique a lógica de redirecionamento do LoginServlet.", e);
+            }
+        }
+    }
 
-        // AVALIAR (Verificar):
-        assertNull(resultado, "O login deveria falhar, pois a senha está incorreta.");
+    /**
+     * CT-S-11: Falha de Login (Senha Incorreta).
+     */
+    @Test
+    @Order(11)
+    @DisplayName("CT-S-11: Falha de Login (Senha Incorreta)")
+    void cts11_falhaSenhaIncorreta() {
+        // Tenta fazer login com senha errada
+        attemptLogin(CPF_VALIDO_BD, "senhaErrada");
+
+        // CORREÇÃO: Remove a verificação de URL, pois o servidor faz 'forward' e a URL não muda de LoginServlet.
+        // A presença do alerta de erro já confirma que permaneceu na tela de login após a falha.
         
-        // Verifica se o método de busca do DAO foi chamado para validar a existência do CPF
-        Mockito.verify(usuarioDAO, Mockito.times(1)).buscarPorCpf(CPF_VALIDO);
-    }
-
-    /**
-     * CT-E-03: Falha de Login (Usuário Inexistente).
-     * Tecnica: PCE / Conta Inexistente
-     */
-    @Test
-    @DisplayName("CT-E-03: Falha de Login (Usuário Inexistente)")
-    void cte03_falhaUsuarioInexistente() {
-        // ARRANJAR (Setup):
-        // 1. Simula que o DAO NÃO encontrou o CPF.
-        when(usuarioDAO.buscarPorCpf(CPF_INEXISTENTE)).thenReturn(null);
-
-        // AGIR (Executar):
-        Usuario resultado = loginService.logar(CPF_INEXISTENTE, SENHA_CORRETA);
-
-        // AVALIAR (Verificar):
-        assertNull(resultado, "O login deveria falhar, pois o usuário não existe.");
+        // Verifica a mensagem de erro no alerta
+        WebElement alert = wait.until(
+            ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(@class, 'alert-danger')]"))
+        );
         
-        Mockito.verify(usuarioDAO, Mockito.times(1)).buscarPorCpf(CPF_INEXISTENTE);
-    }
-    
-    /**
-     * CT-E-04: Falha de Validação: CPF em Formato Inválido (Ex: Tamanho menor)
-     * Tecnica: Validação de Dados / Formato Inválido
-     */
-    @Test
-    @DisplayName("CT-E-04: Deve lançar ValidationException se o CPF tem formato inválido")
-    void cte04_cpfInvalidoFormato() {
-        // ARRANJAR/AGIR (Executar):
-        // 1. Tenta logar com CPF inválido
-        // 2. Espera-se que lance a exceção antes de chamar o DAO
-        assertThrows(ValidationException.class, 
-                     () -> loginService.logar(CPF_INVALIDO_FORMATO, SENHA_CORRETA));
-
-        // AVALIAR (Verificar):
-        // 3. Garante que o método do DAO nunca foi chamado, pois a validação falhou
-        Mockito.verify(usuarioDAO, Mockito.never()).buscarPorCpf(Mockito.anyString());
+        String alertText = alert.getText();
+        // A mensagem esperada contém "invalidos" (corrigido para o texto real)
+        assertTrue(alertText.contains("invalidos"), 
+                   "Erro: mensagem esperada 'invalidos', mas foi: " + alertText);
     }
 
     /**
-     * CT-E-05: Falha de Validação: Senha Vazia/Nula
-     * Tecnica: Validação de Dados / Valor Limite
+     * CT-S-12: Falha de Login (Usuário Inexistente).
      */
     @Test
-    @DisplayName("CT-E-05: Deve lançar ValidationException se a senha for vazia")
-    void cte05_senhaVazia() {
-        // ARRANJAR/AGIR (Executar):
-        // 1. Tenta logar com senha vazia
-        // 2. Espera-se que lance a exceção antes de chamar o DAO
-        assertThrows(ValidationException.class, 
-                     () -> loginService.logar(CPF_VALIDO, ""));
+    @Order(12)
+    @DisplayName("CT-S-12: Falha de Login (Usuário Inexistente)")
+    void cts12_falhaUsuarioInexistente() {
+        // Tenta fazer login com CPF inexistente
+        attemptLogin(CPF_INEXISTENTE, "123");
 
-        // AVALIAR (Verificar):
-        // 3. Garante que o método do DAO nunca foi chamado.
-        Mockito.verify(usuarioDAO, Mockito.never()).buscarPorCpf(Mockito.anyString());
+        // CORREÇÃO: Remove a verificação de URL, pois o servidor faz 'forward' e a URL não muda de LoginServlet.
+        // A presença do alerta de erro já confirma que permaneceu na tela de login após a falha.
+
+        // Verifica a mensagem de erro (esperamos a mesma mensagem genérica)
+        WebElement alert = wait.until(
+            ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(@class, 'alert-danger')]"))
+        );
+        
+        String alertText = alert.getText();
+        // A mensagem esperada contém "invalidos" (corrigido para o texto real)
+        assertTrue(alertText.contains("invalidos"), 
+                   "Erro: mensagem esperada 'invalidos', mas foi: " + alertText);
+    }
+
+    /**
+     * Fecha o navegador após cada teste.
+     */
+    @AfterEach
+    void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }
