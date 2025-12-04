@@ -68,7 +68,7 @@ Antes de começar, baixe e instale os seguintes softwares:
 	FLUSH PRIVILEGES;
 
 ### 3. Configurando o Projeto no Eclipse
-1. **Clone o Repositório:** `git clone https://github.com/renatouff/trabalho-banco-atm.git`
+1. **Clone o Repositório:** `git clone https://github.com/vaniacourses/trabalho-qt-tela-azul-do-windows.git`
 2. **Importe o Projeto no Eclipse:**
     * Vá em `File > Import...` > `Maven > Existing Maven Projects`.
     * Aponte para a pasta do projeto (a que contém o `pom.xml`) e finalize a importação.
