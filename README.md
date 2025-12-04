@@ -12,6 +12,7 @@ Todos os documentos e artefatos de teste gerados para o projeto estão disponív
 * **Planilha de Casos de Teste (Manuais e Unitários):** [Link](https://docs.google.com/spreadsheets/d/1hIZYAHNf7_Ws7WwVpP2s7LdwW3uqgnCW/)
 * **Pasta de Evidências (Screenshots e Logs):** [Link](https://drive.google.com/drive/folders/1dq5cM1rdKQ8Lkx3HSO6in07fJbf6mxd-)
 * **Apresentação PPTX (Entrega 1):** [Link](https://docs.google.com/presentation/d/1cnJ-3ldlAAhiPNQFaiI9VJ19VoUX42sp/)
+* **Apresentação PDF (Entrega 2):** [Link](https://drive.google.com/file/d/1F2ByDviHUEJr2pn_MLm5k4HtyOoe-cMP/)
 * **Instruções Oficiais do Trabalho (PDF):** [Link](https://docs.google.com/document/d/1lPZmF6VMtyhSkKBZBjU5IbR2nYfEZ-alYI1ak89zXL8/)
 * **Repositório GitHub (Código da Entrega 1):** [Link](https://github.com/renatouff/trabalho-banco-atm)
 * **Repositório GitHub (Código da Entrega 2):** [Link](https://github.com/vaniacourses/trabalho-qt-tela-azul-do-windows)
@@ -102,24 +103,8 @@ Antes de começar, baixe e instale os seguintes softwares:
 
 **Grupo:** Tela Azul do Windows
 
-* **Felipe Lopes:** adição de complexidade ciclomática para classe servlet, testes individuais
-* **Israel Bousquet:** cadastro de projeto de teste (com inclusao dos casos de teste) no testlink, apresentação, correção de conflitos, testes individuais
-* **Marcos Rodrigues:** testes individuais, ajuste no documento de teste
-* **Renato Luiz:** configuração do projeto, criação do plano de testes, testes individuais
-* **Rodrigo Dias:** testes individuais
-
-> **Nota sobre Testes Individuais:** Refere-se à realização completa dos testes estruturais, funcionais, de sistema, integração e unitários para os módulos atribuídos a cada aluno. Inclui também a documentação das evidências de teste, documentação da utilização do Selenium e a adição dos casos de teste da segunda entrega nos documentos necessários.
-
----
-
-## Política de Branch e Pull Requests
-
-- A branch principal do repositório foi alterada para `origin/dev` devido a conflitos recorrentes de merge na `main`.
-- Para aumentar a segurança e previsibilidade, o fluxo passou a aceitar mudanças apenas via **Pull Requests**:
-    - Commits diretos na branch principal foram desabilitados.
-    - Toda alteração deve abrir PR para revisão e integração controlada.
-- Recomendações de ajuste local:
-    - `git fetch origin`
-    - `git checkout dev`
-    - `git branch --set-upstream-to=origin/dev dev`
-    - `git pull`
+* Felipe Lopes
+* Israel Bousquet
+* Marcos Rodrigues
+* Renato Luiz
+* Rodrigo Dias
