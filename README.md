@@ -9,10 +9,11 @@ Este projeto é uma aplicação web que simula as funcionalidades básicas de um
 Todos os documentos e artefatos de teste gerados para o projeto estão disponíveis nos links abaixo:
 
 * **Plano de Teste:** [Link](https://docs.google.com/document/d/1gZI48qXrKt-7Ol-iNRwgWNd4ShzFlkxM/)
-* **Planilha de Casos de Teste (Manuais e Unitários):** [Link](https://docs.google.com/spreadsheets/d/1hIZYAHNf7_Ws7WwVpP2s7LdwW3uqgnCW/)
+* **Planilha de Casos de Teste:** [Link](https://docs.google.com/spreadsheets/d/1hIZYAHNf7_Ws7WwVpP2s7LdwW3uqgnCW/)
 * **Pasta de Evidências (Screenshots e Logs):** [Link](https://drive.google.com/drive/folders/1dq5cM1rdKQ8Lkx3HSO6in07fJbf6mxd-)
 * **Apresentação PPTX (Entrega 1):** [Link](https://docs.google.com/presentation/d/1cnJ-3ldlAAhiPNQFaiI9VJ19VoUX42sp/)
 * **Apresentação PDF (Entrega 2):** [Link](https://drive.google.com/file/d/1F2ByDviHUEJr2pn_MLm5k4HtyOoe-cMP/)
+* **Relatório Final:** [Link](https://docs.google.com/document/d/1C8LBgX9M-NAQyro5YzD6uwUn3WIkb15h/)
 * **Instruções Oficiais do Trabalho (PDF):** [Link](https://docs.google.com/document/d/1lPZmF6VMtyhSkKBZBjU5IbR2nYfEZ-alYI1ak89zXL8/)
 * **Repositório GitHub (Código da Entrega 1):** [Link](https://github.com/renatouff/trabalho-banco-atm)
 * **Repositório GitHub (Código da Entrega 2):** [Link](https://github.com/vaniacourses/trabalho-qt-tela-azul-do-windows)
