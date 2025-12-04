@@ -1,5 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>grupo6</groupId>
     <artifactId>trabalho-intro-dev-web</artifactId>
@@ -9,31 +10,25 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jakartaee>10.0.0</jakartaee>
-        <mysql.version>8.3.0</mysql.version>
-        <junit.jupiter.version>5.10.2</junit.jupiter.version>
-        <mockito.version>5.11.0</mockito.version>
-        <selenium.version>4.18.1</selenium.version>
-        <webdrivermanager.version>5.7.0</webdrivermanager.version>
-        <maven.compiler.release>11</maven.compiler.release>
-        <surefire.version>3.2.5</surefire.version>
+        <jakartaee>10.0.0</jakartaee> <!-- Versão da API Jakarta EE utilizada no projeto -->
     </properties>
 
     <dependencies>
-        <!-- Dependência da API Jakarta EE para desenvolvimento de aplicações web (Servlets, JSP, etc) -->
+        <!-- Dependência da API Jakarta EE para desenvolvimento de aplicações web (Servlets, JSP,
+        etc) -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
             <version>${jakartaee}</version>
             <!-- O servidor de aplicação (GlassFish) fornecerá essa API em tempo de execução -->
-            <scope>provided</scope> 
+            <scope>provided</scope>
         </dependency>
 
         <!-- Dependência do driver JDBC para o MySQL -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>${mysql.version}</version>
+            <version>8.3.0</version>
         </dependency>
 
         <!-- JSTL Jakarta EE 10 (API fornecida pelo servidor + implementação) -->
@@ -49,69 +44,139 @@
             <artifactId>jakarta.servlet.jsp.jstl</artifactId>
             <version>3.0.0</version> <!-- Implementação da JSTL necessária para GlassFish -->
         </dependency>
-        
-        <!-- JUnit Jupiter (API + Engine) -->
+
+        <!-- Dependência do JUnit 5, para escrever e rodar testes unitários em Java -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit.jupiter.version}</version>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
 
-		<!-- Dependência do Mockito, para a criação de 'mocks' nos testes unitários. -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Dependência para Suite de Testes - Imports -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
+            <version>1.10.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Dependência do Mockito, para a criação de 'mocks' e para isolar as dependências nos
+        testes unitários. -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>${mockito.version}</version>
+            <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
 
-        <!-- =================================================================== -->
-        <!-- NOVAS DEPENDÊNCIAS PARA TESTES DE SISTEMA (SELENIUM) -->
-        <!-- =================================================================== -->
-
-        <!-- Selenium Java: A biblioteca principal para automação do navegador -->
+        <!-- Dependência do Selenium, para testes automatizados -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>${selenium.version}</version>
-            <scope>test</scope>
+            <version>4.18.1</version> <!-- Versão estável recente -->
         </dependency>
 
-        <!-- WebDriverManager: Gerencia automaticamente o download do driver do Chrome/Firefox -->
+        <!-- Dependência do Webdriver -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>${webdrivermanager.version}</version>
+            <version>5.7.0</version>
             <scope>test</scope>
         </dependency>
 
     </dependencies>
 
     <build>
-        <finalName>banco-atm</finalName>
         <plugins>
+            <!-- Plugin para compilação do código Java. Configura a versão para o JDK 11. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.8.1</version>
                 <configuration>
-                    <release>${maven.compiler.release}</release>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire.version}</version>
-                <configuration>
-                    <useModulePath>false</useModulePath>
-                </configuration>
-            </plugin>
+
+            <!-- Plugin para empacotar a aplicação como um arquivo WAR. 
+                 Implantação em servidores GlassFish. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>3.3.2</version>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
+			<!-- Plugin para rodar Testes de Mutação -->
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.15.0</version>
+
+                <configuration>
+                    <targetClasses>
+                        <param>br.uff.ic.grupo6.banco.service.*</param>
+                    </targetClasses>
+
+                    <targetTests>
+                        <param>br.uff.ic.grupo6.banco.estrutural.*</param>
+                        <param>br.uff.ic.grupo6.banco.mutacao.*</param>
+                    </targetTests>
+
+                    <excludedClasses>
+                        <param>br.uff.ic.grupo6.banco.controller.*</param>
+                        <param>br.uff.ic.grupo6.banco.dao.*</param>
+                        <param>br.uff.ic.grupo6.banco.model.*</param>
+                    </excludedClasses>
+
+                    <mutators>
+                        <mutator>STRONGER</mutator>
+                    </mutators>
+
+                    <reportsDirectory>${project.build.directory}/pit-reports</reportsDirectory>
+                    <verbose>true</verbose>
+                </configuration>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-junit5-plugin</artifactId>
+                        <version>1.2.1</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>5.10.0</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-launcher</artifactId>
+                        <version>1.10.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
         </plugins>
     </build>
 </project>
